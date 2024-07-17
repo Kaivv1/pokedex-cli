@@ -1,9 +1,13 @@
 package api
 
-import "net/http"
+import (
+	"github.com/Kaivv1/pokedex-cli/internal/cache"
+	"net/http"
+)
 
 type Client struct {
 	httpClient http.Client
+	cache      cache.Cache
 }
 
 type LocationArea struct {

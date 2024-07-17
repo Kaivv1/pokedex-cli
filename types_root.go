@@ -1,6 +1,8 @@
 package main
 
-import "github.com/Kaivv1/pokedex-cli/internal/api"
+import (
+	"github.com/Kaivv1/pokedex-cli/internal/api"
+)
 
 type ClientCommand struct {
 	Name        string
