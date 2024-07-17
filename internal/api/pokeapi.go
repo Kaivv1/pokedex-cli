@@ -2,55 +2,45 @@ package api
 
 import (
 	"encoding/json"
-	"errors"
+	"fmt"
 	"io"
-	"log"
 	"net/http"
-
-	types "github.com/Kaivv1/pokedex-cli/types"
+	"time"
 )
 
-var Config types.Config
-
-func GetLocationAreas(page string) ([]types.Area, error) {
-	var url string
-	firstPage := false
-
-	switch page {
-	case "next":
-		if Config.Next == nil {
-			url = "https://pokeapi.co/api/v2/location-area"
-		} else {
-			url = *Config.Next
-		}
-	case "previous":
-		if Config.Previous == nil {
-			firstPage = true
-		} else {
-			url = *Config.Previous
-		}
+func NewClient() Client {
+	return Client{
+		httpClient: http.Client{
+			Timeout: time.Minute,
+		},
 	}
-	if firstPage {
-		return nil, errors.New("you are on page 1")
-	}
+}
 
-	res, err := http.Get(url)
+func (c *Client) GetLocationAreas(url *string) (LocationArea, error) {
+	fullUrl := baseUrl + "/location-area"
+	if url != nil {
+		fullUrl = *url
+	}
+	req, err := http.NewRequest("GET", fullUrl, nil)
 	if err != nil {
-		log.Fatal(err)
+		return LocationArea{}, err
 	}
-	body, err := io.ReadAll(res.Body)
-	res.Body.Close()
+	res, err := c.httpClient.Do(req)
 	if err != nil {
-		log.Fatalf("Reading body gave error: %v", err)
+		return LocationArea{}, err
 	}
-	var locationArea types.LocationArea
-	err = json.Unmarshal(body, &locationArea)
+	defer res.Body.Close()
+	if res.StatusCode > 399 {
+		return LocationArea{}, fmt.Errorf("bad status code %d", res.StatusCode)
+	}
+	data, err := io.ReadAll(res.Body)
 	if err != nil {
-		log.Fatalf("Failed to unmarshal the body: %v", err)
+		return LocationArea{}, err
 	}
-
-	Config.Next = &locationArea.Next
-	Config.Previous = locationArea.Previous
-
-	return locationArea.Results, nil
+	locationArea := LocationArea{}
+	err = json.Unmarshal(data, &locationArea)
+	if err != nil {
+		return LocationArea{}, err
+	}
+	return locationArea, nil
 }

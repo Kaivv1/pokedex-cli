@@ -1,5 +1,11 @@
 package main
 
+import "github.com/Kaivv1/pokedex-cli/internal/api"
+
 func main() {
-	startRepl()
+	config := Config{
+		Pokeapi: api.NewClient(),
+	}
+
+	startRepl(&config)
 }

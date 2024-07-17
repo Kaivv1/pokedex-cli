@@ -4,12 +4,11 @@ import (
 	"fmt"
 	"log"
 
-	types "github.com/Kaivv1/pokedex-cli/types"
 	"github.com/chzyer/readline"
 )
 
-func getCommands() map[string]types.ClientCommand {
-	return map[string]types.ClientCommand{
+func getCommands() map[string]ClientCommand {
+	return map[string]ClientCommand{
 		"map": {
 			Name:        "map",
 			Description: "Displays the names of 20 location areas in the Pokemon world",
@@ -33,7 +32,7 @@ func getCommands() map[string]types.ClientCommand {
 	}
 }
 
-func startRepl() {
+func startRepl(cfg *Config) {
 	rl, err := readline.NewEx(&readline.Config{
 		Prompt: "pokedex > ",
 	})
@@ -52,7 +51,10 @@ func startRepl() {
 
 		commands := getCommands()
 		if command, exists := commands[input]; exists {
-			command.Callback()
+			err := command.Callback(cfg)
+			if err != nil {
+				fmt.Println(err)
+			}
 		} else {
 			fmt.Println("There is no such command: " + input)
 		}
