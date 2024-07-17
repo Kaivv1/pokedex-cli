@@ -4,30 +4,31 @@ import (
 	"fmt"
 	"log"
 
+	types "github.com/Kaivv1/pokedex-cli/types"
 	"github.com/chzyer/readline"
 )
 
-func getCommands() map[string]ClientCommand {
-	return map[string]ClientCommand{
+func getCommands() map[string]types.ClientCommand {
+	return map[string]types.ClientCommand{
 		"map": {
-			name:        "map",
-			description: "Displays the names of 20 location areas in the Pokemon world",
-			callback:    commandMap,
+			Name:        "map",
+			Description: "Displays the names of 20 location areas in the Pokemon world",
+			Callback:    commandMap,
 		},
 		"mapb": {
-			name:        "mapb",
-			description: "Displays the previous 20 locations",
-			callback:    commandMapb,
+			Name:        "mapb",
+			Description: "Displays the previous 20 locations",
+			Callback:    commandMapb,
 		},
 		"help": {
-			name:        "help",
-			description: "Displays a help message",
-			callback:    commandHelp,
+			Name:        "help",
+			Description: "Displays a help message",
+			Callback:    commandHelp,
 		},
 		"exit": {
-			name:        "exit",
-			description: "Exit the pokedex",
-			callback:    commandExit,
+			Name:        "exit",
+			Description: "Exit the pokedex",
+			Callback:    commandExit,
 		},
 	}
 }
@@ -51,7 +52,7 @@ func startRepl() {
 
 		commands := getCommands()
 		if command, exists := commands[input]; exists {
-			command.callback()
+			command.Callback()
 		} else {
 			fmt.Println("There is no such command: " + input)
 		}
