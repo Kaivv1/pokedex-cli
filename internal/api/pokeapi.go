@@ -20,8 +20,8 @@ func NewClient(cacheInterval time.Duration) Client {
 }
 
 func (c *Client) GetLocationAreas(url *string) (LocationArea, error) {
-
-	fullUrl := baseUrl + "/location-area"
+	endPoint := "/location-area"
+	fullUrl := baseUrl + endPoint
 	if url != nil {
 		fullUrl = *url
 	}
@@ -60,4 +60,42 @@ func (c *Client) GetLocationAreas(url *string) (LocationArea, error) {
 	c.cache.Add(fullUrl, data)
 	fmt.Println("this is not cached")
 	return locationArea, nil
+}
+
+func (c *Client) GetAreaPokemons(areaName string) (AreaPokemons, error) {
+	endPoint := "/location-area/" + areaName
+	fullUrl := baseUrl + endPoint
+
+	if data, ok := c.cache.Get(fullUrl); ok {
+		areaPokemons := AreaPokemons{}
+		err := json.Unmarshal(data, &areaPokemons)
+		if err != nil {
+			return AreaPokemons{}, err
+		}
+		return areaPokemons, nil
+	}
+
+	req, err := http.NewRequest("GET", fullUrl, nil)
+	if err != nil {
+		return AreaPokemons{}, err
+	}
+	res, err := c.httpClient.Do(req)
+	if err != nil {
+		return AreaPokemons{}, err
+	}
+
+	defer res.Body.Close()
+	if res.StatusCode > 399 {
+		return AreaPokemons{}, fmt.Errorf("bad status code %d", res.StatusCode)
+	}
+	data, err := io.ReadAll(res.Body)
+
+	areaPokemons := AreaPokemons{}
+	err = json.Unmarshal(data, &areaPokemons)
+	if err != nil {
+		return AreaPokemons{}, err
+	}
+	c.cache.Add(fullUrl, data)
+
+	return areaPokemons, nil
 }

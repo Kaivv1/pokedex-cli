@@ -43,6 +43,11 @@ func commandMapb(cfg *Config) error {
 	return nil
 }
 
+func commandExplore(cfg *Config) error {
+
+	return nil
+}
+
 func commandHelp(cfg *Config) error {
 	fmt.Println()
 	fmt.Println("Welcome to Pokedex!")

@@ -7,7 +7,7 @@ import (
 type ClientCommand struct {
 	Name        string
 	Description string
-	Callback    func(*Config) error
+	Callback    func(*Config, ...string) error
 }
 
 type Config struct {
