@@ -8,9 +8,10 @@ import (
 	"github.com/chzyer/readline"
 )
 
-func getArgs(input string) ([]string, error) {
+func getArgs(input string) []string {
 	lowerCaseInput := strings.ToLower(input)
 	args := strings.Fields(lowerCaseInput)
+	return args
 }
 
 func getCommands() map[string]ClientCommand {
@@ -59,10 +60,11 @@ func startRepl(cfg *Config) {
 			log.Fatal(err)
 			break
 		}
+		args := getArgs(input)
 
 		commands := getCommands()
-		if command, exists := commands[input]; exists {
-			err := command.Callback(cfg)
+		if command, exists := commands[args[0]]; exists {
+			err := command.Callback(cfg, args...)
 			if err != nil {
 				fmt.Println(err)
 			}

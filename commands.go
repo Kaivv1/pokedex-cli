@@ -11,12 +11,13 @@ func commandMap(cfg *Config, args ...string) error {
 	if err != nil {
 		return err
 	}
+	fmt.Println()
 	fmt.Println("Location areas:")
 	for _, area := range locationAreas.Results {
 		str := fmt.Sprintf("- %s", area.Name)
 		fmt.Println(str)
 	}
-
+	fmt.Println()
 	cfg.NextLocationUrl = locationAreas.Next
 	cfg.PreviousLocationUrl = locationAreas.Previous
 
@@ -31,12 +32,13 @@ func commandMapb(cfg *Config, args ...string) error {
 	if err != nil {
 		return err
 	}
+	fmt.Println()
 	fmt.Println("Location areas:")
 	for _, area := range locationAreas.Results {
 		str := fmt.Sprintf("- %s", area.Name)
 		fmt.Println(str)
 	}
-
+	fmt.Println()
 	cfg.NextLocationUrl = locationAreas.Next
 	cfg.PreviousLocationUrl = locationAreas.Previous
 
@@ -44,7 +46,19 @@ func commandMapb(cfg *Config, args ...string) error {
 }
 
 func commandExplore(cfg *Config, args ...string) error {
+	areaPokemons, err := cfg.Pokeapi.GetAreaPokemons(args[1])
+	if err != nil {
+		return err
+	}
+	fmt.Println()
+	fmt.Printf("Exploring %s...\n", args[1])
+	fmt.Println("Found pokemon: ")
+	for _, pokemon := range areaPokemons.PokemonEncounters {
+		str := fmt.Sprintf("- %s", pokemon.Pokemon.Name)
+		fmt.Println(str)
 
+	}
+	fmt.Println()
 	return nil
 }
 
