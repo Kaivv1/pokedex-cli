@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-func commandMap(cfg *Config) error {
+func commandMap(cfg *Config, args ...string) error {
 	locationAreas, err := cfg.Pokeapi.GetLocationAreas(cfg.NextLocationUrl)
 	if err != nil {
 		return err
@@ -23,7 +23,7 @@ func commandMap(cfg *Config) error {
 	return nil
 }
 
-func commandMapb(cfg *Config) error {
+func commandMapb(cfg *Config, args ...string) error {
 	if cfg.PreviousLocationUrl == nil {
 		return errors.New("you are on page 1")
 	}
@@ -43,12 +43,12 @@ func commandMapb(cfg *Config) error {
 	return nil
 }
 
-func commandExplore(cfg *Config) error {
+func commandExplore(cfg *Config, args ...string) error {
 
 	return nil
 }
 
-func commandHelp(cfg *Config) error {
+func commandHelp(cfg *Config, args ...string) error {
 	fmt.Println()
 	fmt.Println("Welcome to Pokedex!")
 	fmt.Println("Usage:")
@@ -63,7 +63,7 @@ func commandHelp(cfg *Config) error {
 	return nil
 }
 
-func commandExit(cfg *Config) error {
+func commandExit(cfg *Config, args ...string) error {
 	os.Exit(0)
 	return nil
 }

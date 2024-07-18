@@ -3,9 +3,15 @@ package main
 import (
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/chzyer/readline"
 )
+
+func getArgs(input string) ([]string, error) {
+	lowerCaseInput := strings.ToLower(input)
+	args := strings.Fields(lowerCaseInput)
+}
 
 func getCommands() map[string]ClientCommand {
 	return map[string]ClientCommand{
@@ -18,6 +24,11 @@ func getCommands() map[string]ClientCommand {
 			Name:        "mapb",
 			Description: "Displays the previous 20 locations",
 			Callback:    commandMapb,
+		},
+		"explore": {
+			Name:        "explore",
+			Description: "See a list of all the Pokemon in a given area",
+			Callback:    commandExplore,
 		},
 		"help": {
 			Name:        "help",
