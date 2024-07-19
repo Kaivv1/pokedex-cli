@@ -31,6 +31,11 @@ func getCommands() map[string]ClientCommand {
 			Description: "See a list of all the Pokemon in a given area",
 			Callback:    commandExplore,
 		},
+		"catch": {
+			Name:        "catch",
+			Description: "Catch a Pokemon and add it to your Pokedex",
+			Callback:    commandCatch,
+		},
 		"help": {
 			Name:        "help",
 			Description: "Displays a help message",
@@ -46,7 +51,7 @@ func getCommands() map[string]ClientCommand {
 
 func startRepl(cfg *Config) {
 	rl, err := readline.NewEx(&readline.Config{
-		Prompt: "pokedex > ",
+		Prompt: "Pokedex > ",
 	})
 	if err != nil {
 		log.Fatal(err)

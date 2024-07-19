@@ -3,7 +3,9 @@ package main
 import (
 	"errors"
 	"fmt"
+	"math/rand"
 	"os"
+	"time"
 )
 
 func commandMap(cfg *Config, args ...string) error {
@@ -11,13 +13,11 @@ func commandMap(cfg *Config, args ...string) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println()
 	fmt.Println("Location areas:")
 	for _, area := range locationAreas.Results {
-		str := fmt.Sprintf("- %s", area.Name)
+		str := fmt.Sprintf(" - %s", area.Name)
 		fmt.Println(str)
 	}
-	fmt.Println()
 	cfg.NextLocationUrl = locationAreas.Next
 	cfg.PreviousLocationUrl = locationAreas.Previous
 
@@ -32,13 +32,11 @@ func commandMapb(cfg *Config, args ...string) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println()
 	fmt.Println("Location areas:")
 	for _, area := range locationAreas.Results {
-		str := fmt.Sprintf("- %s", area.Name)
+		str := fmt.Sprintf(" - %s", area.Name)
 		fmt.Println(str)
 	}
-	fmt.Println()
 	cfg.NextLocationUrl = locationAreas.Next
 	cfg.PreviousLocationUrl = locationAreas.Previous
 
@@ -50,15 +48,53 @@ func commandExplore(cfg *Config, args ...string) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println()
 	fmt.Printf("Exploring %s...\n", args[1])
+	time.Sleep(time.Second)
 	fmt.Println("Found pokemon: ")
 	for _, pokemon := range areaPokemons.PokemonEncounters {
-		str := fmt.Sprintf("- %s", pokemon.Pokemon.Name)
+		str := fmt.Sprintf(" - %s", pokemon.Pokemon.Name)
 		fmt.Println(str)
 
 	}
-	fmt.Println()
+	return nil
+}
+
+var failed bool
+
+func commandCatch(cfg *Config, args ...string) error {
+	pokemon, err := cfg.Pokeapi.GetPokemonInformation(args[1])
+	if err != nil {
+		return err
+	}
+	if _, exists := cfg.Pokedex.Get(pokemon.Name); exists {
+		return fmt.Errorf("you already have a %s and it's angry that you want to replace him >_<", pokemon.Name)
+	}
+
+	if failed {
+		fmt.Println("You stand there, desperate 0_0")
+	} else {
+		fmt.Println("You are sneaking...")
+	}
+	time.Sleep(time.Second)
+	if failed {
+		fmt.Printf("Throwing a Pokeball at %s again...\n", args[1])
+	} else {
+		fmt.Printf("Throwing a Pokeball at %s...\n", args[1])
+	}
+	time.Sleep(time.Second)
+	fmt.Printf("You hit %s's head...\n", pokemon.Name)
+	time.Sleep(time.Second)
+	threshold := 50
+	randomRoll := rand.Intn(pokemon.BaseExperience)
+	if randomRoll < threshold {
+		fmt.Printf("%s escaped!\n", pokemon.Name)
+		failed = true
+	} else {
+		fmt.Printf("%s was caught!\n", pokemon.Name)
+		cfg.Pokedex.Add(pokemon)
+		failed = false
+	}
+
 	return nil
 }
 

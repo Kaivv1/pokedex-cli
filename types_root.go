@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/Kaivv1/pokedex-cli/internal/api"
+	"github.com/Kaivv1/pokedex-cli/internal/pokedex"
 )
 
 type ClientCommand struct {
@@ -13,5 +14,6 @@ type ClientCommand struct {
 type Config struct {
 	NextLocationUrl     *string
 	PreviousLocationUrl *string
-	Pokeapi             api.Client
+	Pokeapi             *api.Client
+	Pokedex             *pokedex.Pokedex
 }
