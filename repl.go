@@ -27,14 +27,24 @@ func getCommands() map[string]ClientCommand {
 			Callback:    commandMapb,
 		},
 		"explore": {
-			Name:        "explore",
+			Name:        "explore {location-area}",
 			Description: "See a list of all the Pokemon in a given area",
 			Callback:    commandExplore,
 		},
 		"catch": {
-			Name:        "catch",
+			Name:        "catch {pokemon}",
 			Description: "Catch a Pokemon and add it to your Pokedex",
 			Callback:    commandCatch,
+		},
+		"inspect": {
+			Name:        "inspect {pokemon}",
+			Description: "inspect and see details about the pokemon you caught",
+			Callback:    commandInspect,
+		},
+		"pokedex": {
+			Name:        "pokedex",
+			Description: "see all of the Pokemon you have caught",
+			Callback:    commandPokedex,
 		},
 		"help": {
 			Name:        "help",

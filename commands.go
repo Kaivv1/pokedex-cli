@@ -69,7 +69,6 @@ func commandCatch(cfg *Config, args ...string) error {
 	if _, exists := cfg.Pokedex.Get(pokemon.Name); exists {
 		return fmt.Errorf("you already have a %s and it's angry that you want to replace him >_<", pokemon.Name)
 	}
-
 	if failed {
 		fmt.Println("You stand there, desperate 0_0")
 	} else {
@@ -91,10 +90,39 @@ func commandCatch(cfg *Config, args ...string) error {
 		failed = true
 	} else {
 		fmt.Printf("%s was caught!\n", pokemon.Name)
+		fmt.Printf("You can now use command inspect %s to see details about your new Pokemon\n", pokemon.Name)
 		cfg.Pokedex.Add(pokemon)
 		failed = false
 	}
 
+	return nil
+}
+
+func commandInspect(cfg *Config, args ...string) error {
+	pokemon, exist := cfg.Pokedex.Get(args[1])
+	if !exist {
+		return fmt.Errorf("you don't have %s in your Pokedex, first catch it then inspect it", args[1])
+	}
+	fmt.Printf("Name: %s\n", pokemon.Name)
+	fmt.Printf("Height: %d\n", pokemon.Height)
+	fmt.Printf("Weight: %d\n", pokemon.Weight)
+	fmt.Println("Stats: ")
+	for _, stat := range pokemon.Stats {
+		fmt.Printf(" - %s: %d\n", stat.Stat.Name, stat.BaseStat)
+	}
+	fmt.Println("Types: ")
+	for _, pokeType := range pokemon.Types {
+		fmt.Printf(" - %s\n", pokeType.Type.Name)
+	}
+	return nil
+}
+
+func commandPokedex(cfg *Config, args ...string) error {
+	pokemons := cfg.Pokedex.List()
+	fmt.Println("Your Pokedex: ")
+	for k := range pokemons {
+		fmt.Printf(" - %s\n", k)
+	}
 	return nil
 }
 

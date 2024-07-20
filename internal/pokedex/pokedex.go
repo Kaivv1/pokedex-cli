@@ -14,3 +14,7 @@ func (p *Pokedex) Get(pokemonName string) (Pokemon, bool) {
 	pokemon, exists := p.Pokedex[pokemonName]
 	return pokemon, exists
 }
+
+func (p *Pokedex) List() map[string]Pokemon {
+	return p.Pokedex
+}

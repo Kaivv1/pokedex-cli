@@ -9,7 +9,7 @@ import (
 
 func main() {
 	config := Config{
-		Pokeapi: api.NewClient(time.Minute * 20),
+		Pokeapi: api.NewClient(time.Minute * 5),
 		Pokedex: pokedex.NewPokedex(),
 	}
 
